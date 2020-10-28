@@ -1,4 +1,4 @@
-package td1.exo2;
+package td1.exo2.paires;
 
 class Paire<T, U> {
     private final T element1;
@@ -31,7 +31,7 @@ class Paire<T, U> {
         return new Paire<>(this.element1, element);
     }
 
-    @Override
+
     public String toString() {
         StringBuilder sb = new StringBuilder("(");
         sb.append(this.element1)
