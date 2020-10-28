@@ -1,4 +1,4 @@
-package td1.exo3.arbresGeneralises;
+package td1.exo3.arbresSimples;
 
 import java.util.HashSet;
 import java.util.List;
