@@ -1,32 +1,51 @@
 package td1.exo3.arbresSimples;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Feuille implements Arbre {
-    private final Integer valeur;
 
-    public Feuille(Integer valeur) { this.valeur = valeur; }
+    private final int valeur;
 
-    @Override
-    public int taille() { return 1; }
-
-    @Override
-    public boolean contient(final Integer val) { return val.equals(this.valeur); }
+    public Feuille(final int valeur) {
+        this.valeur = valeur;
+    }
 
     @Override
-    public Integer min() { return this.valeur; }
+    public int taille() {
+        return 1;
+    }
 
     @Override
-    public Integer max() { return this.valeur; }
+    public boolean contient(final Integer val) {
+        return val.equals(valeur);
+    }
 
     @Override
-    public boolean estTrie() { return true; }
+    public Set<Integer> valeurs() {
+        return Set.of(valeur);
+    }
 
     @Override
-    public Set<Integer> valeurs() { return new HashSet<>(List.of(this.valeur)); }
+    public Integer somme() {
+        return valeur;
+    }
 
     @Override
-    public Integer somme() { return this.valeur; }
+    public Integer min() {
+        return valeur;
+    }
+
+    @Override
+    public Integer max() {
+        return valeur;
+    }
+
+    /**
+     * une feuille est toujours triée.
+     */
+    @Override
+    public boolean estTrie() {
+        return true;
+    }
+    
 }

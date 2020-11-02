@@ -1,62 +1,119 @@
 package td1.exo3.arbresSimples;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class Noeud implements Arbre {
+
     private final List<Arbre> fils;
 
-    public Noeud() { this.fils = new ArrayList<>(); }
-    public Noeud(List<Arbre> fils) { this.fils = fils; }
+    public Noeud(final List<Arbre> fils) {
+        this.fils = fils;
+    }
 
     @Override
-    public int taille() { return this.fils.stream().map(Arbre::taille).reduce(0, Integer::sum); }
+    public int taille() {
+        int rtr = 0;
+        for (final Arbre a : fils) {
+            rtr += a.taille();
+        }
+        return rtr;
+    }
 
     @Override
-    public Integer somme() { return this.taille() != 0 ? this.fils.stream().map(Arbre::somme).reduce(0, Integer::sum) : null; }
+    public boolean contient(final Integer val) {
+        boolean rtr = false;
+        for (final Arbre a : fils) {
+            if (a.contient(val)) return true;
+        }
+        return rtr;
+    }
+
+    @Override
+    public Set<Integer> valeurs() {
+        Set<Integer> rtr = new HashSet<>();
+        for (final Arbre a : fils) {
+            rtr.addAll(a.valeurs());
+        }
+        return rtr;
+    }
+
+    @Override
+    public Integer somme() {
+        if (fils == null || fils.size() == 0)
+            return null; // should it be 0 ? no because nothing to sum
+        // alternative without 0 initialization
+        // int rtr = fils.get(0).somme();
+        // for (int i = 1; i<fils.size(); i++) {
+        //     rtr += fils.get(i).somme();
+        // }
+        int rtr = 0;
+        for (Arbre a : fils) {
+            rtr += a.somme();
+        }
+        return rtr;
+    }
 
     @Override
     public Integer min() {
-        if(this.taille() == 0) {
+        if (fils == null || fils.size() == 0)
             return null;
-        }
-        Integer min = Integer.MAX_VALUE;
-        for(Arbre unfils: this.fils) {
-            Integer tmpMin = unfils.min();
-            if(tmpMin < min) {
-                min = tmpMin;
+        int rtr = fils.get(0).min();
+        for (int i = 1; i < fils.size(); i++) {
+            int min = fils.get(i).min();
+            if (min < rtr) {
+                rtr = min;
             }
         }
-        return min;
+        return rtr;
     }
 
     @Override
     public Integer max() {
-        if(this.taille() == 0) {
+        if (fils == null || fils.size() == 0)
             return null;
-        }
-        Integer max = Integer.MIN_VALUE;
-        for(Arbre unfils: this.fils) {
-            Integer tmpMax = unfils.max();
-            if(tmpMax > max) {
-                max = tmpMax;
+        int rtr = fils.get(0).max();
+        for (int i = 1; i < fils.size(); i++) {
+            int max = fils.get(i).max();
+            if (max > rtr) {
+                rtr = max;
             }
         }
-        return max;
+        return rtr;
     }
 
+    /**
+     * un noeud de fils f1 ... fi ... fn est trié ssi
+     * <ol>
+     * <li>&forall; i &in; 1..n, fi est trié</li>
+     * <li>&forall; i &in; 1..n-1, max(fi)<= min(fi+1)</li>
+     * </ol>
+     */
     @Override
-    public boolean estTrie() { return this.fils.stream().allMatch(Arbre::estTrie); }
-
-    @Override
-    public boolean contient(final Integer val) { return this.fils.stream().anyMatch(unFils -> unFils.contient(val)); }
-
-    @Override
-    public Set<Integer> valeurs() {
-        Set<Integer> fusion = new HashSet<>();
-        this.fils.forEach(unFils -> fusion.addAll(unFils.valeurs()));
-        return fusion;
+    public boolean estTrie() {
+        return conditionTrie1() && conditionTrie2();
     }
+
+    private boolean conditionTrie1() {
+        boolean rtr = true;
+        for (int i = 0; i < fils.size() - 1; i++) {
+            final Arbre fi = fils.get(i);
+            if (!fi.estTrie())
+                return false;
+        }
+        return rtr;
+    }
+
+    private boolean conditionTrie2() {
+        boolean rtr = true;
+        for (int i = 0; i < fils.size() - 1; i++) {
+            final Arbre fi = fils.get(i);
+            final Arbre fj = fils.get(i+1);
+                if (fi.max() > fj.min())
+                    return false;
+        }
+        return rtr;
+    }
+    
 }
